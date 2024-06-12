@@ -11,9 +11,13 @@ export default function Quizes() {
   const navigate = useNavigate();
   const location = useLocation();
   const username = location.state ? location.state.username : "";
-  // const navigateToRoute = (route) => {
-  //     navigate(route); // Use navigate function to navigate to the specified route
-  // }
+  const isAdmin = location.state?.isAdmin || false; // Access the admin status from the state
+
+  // console.log("Is Admin:", isAdmin); // Check if the admin status is correctly passed
+
+  const navigateToRoute = (route) => {
+    navigate(route, { state: { isAdmin } }); // Pass the isAdmin status in the state
+  }
 
   return (
     <div>
@@ -26,19 +30,19 @@ export default function Quizes() {
           title="TECHNOLOGY"
           image={tech}
           description="Let's play with the Technology quiz"
-          onClick={() => navigate("/technology")}
+          onClick={() => navigateToRoute("/technology")}
         />
         <Card
           title="SCIENCE"
           image={science}
           description="Let's play with the Science quiz"
-          onClick={() => navigate("/science")}
+          onClick={() => navigateToRoute("/science")}
         />
         <Card
           title="SPORTS"
           image={sport}
           description="Let's play with the Sports quiz"
-          onClick={() => navigate("/sports")}
+          onClick={() => navigateToRoute("/sports")}
         />
       </div>
       <div>

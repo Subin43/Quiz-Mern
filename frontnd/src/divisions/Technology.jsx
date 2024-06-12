@@ -1,11 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useSnackbar } from 'notistack';
-import { useNavigate } from 'react-router-dom'; // Import useNavigate
+import { useNavigate,useLocation } from 'react-router-dom'; // Import useNavigate
 import Header from '../components/Header';
 import QuizFooter from '../components/QuizFooter';
 import Footer from '../components/Footer';
-
 
 const QuizProgress = ({ totalQuizzes, completedQuizzes, score }) => {
   return (
@@ -27,13 +26,22 @@ const QuizDivision = ({ division }) => {
   const [score, setScore] = useState(0);
   const { enqueueSnackbar } = useSnackbar();
   const navigate = useNavigate(); // Initialize useNavigate
+  const location = useLocation();
+  const isAdmin = location.state?.isAdmin || false; // Access the admin status from the state
+
+  // console.log("Is Admin:", isAdmin); // Check if the admin status is correctly passed
+
 
   useEffect(() => {
     setLoading(true);
-    axios.get('http://localhost:5000/quiz')
+    axios.get('https://quiz-mernstack.onrender.com/quiz')
       .then((response) => {
         const allQuizzes = response.data.allQuiz;
         const divisionQuizzes = allQuizzes.filter(quiz => quiz.division.toLowerCase() === division.toLowerCase());
+  
+        // Sort quizzes by s_No
+        divisionQuizzes.sort((a, b) => a.s_No - b.s_No);
+  
         setFilteredQuizzes(divisionQuizzes);
         setLoading(false);
       })
@@ -43,10 +51,11 @@ const QuizDivision = ({ division }) => {
         console.log("error:", error.message);
       });
   }, [enqueueSnackbar, division]);
+  
 
-  // get the user is admin or not
-  const isAdmin = localStorage.getItem("isAdmin") === "true";
-  console.log(isAdmin);
+  // // get the user is admin or not
+  // const isAdmin = localStorage.getItem("isAdmin") === "true";
+  // console.log(isAdmin);
 
   const handleOptionChange = (quizId, option) => {
     if (!disabledOptions[quizId]) {
@@ -64,6 +73,11 @@ const QuizDivision = ({ division }) => {
   const isCorrectOption = (quiz, option) => {
     return quiz.answer === option;
   };
+
+  // const handleEditClick = (quizId) => {
+  //   localStorage.setItem('quizId', quizId);
+  // };
+
 
   const handleNextClick = () => {
     handleQuizCompletion();
@@ -103,6 +117,10 @@ const QuizDivision = ({ division }) => {
                 <div className="flex items-center mb-2">
                   <span className="font-bold mr-2">{currentQuiz.s_No}.</span>
                   <span className='font-bold mr-2'>{currentQuiz.question}</span>
+                  {/* <Link to = {`/edit/${currentQuiz._id}`}>
+                  <AiOutlineEdit className='text-2xl text-green-800 hover:text-black'
+                    onClick={() => handleEditClick(currentQuiz._id)} />
+                  </Link> */}
                 </div>
                 <ul>
                   {currentQuiz.option.map((option, index) => (
@@ -147,7 +165,7 @@ const QuizDivision = ({ division }) => {
         )}
         <div>
           {
-            isAdmin ? <QuizFooter /> : <Footer />
+            isAdmin ? <QuizFooter currentQuiz={currentQuiz} /> : <Footer />
           }
         </div>
       </div>

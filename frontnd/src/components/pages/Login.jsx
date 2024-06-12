@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { useSnackbar } from 'notistack';
 import Header from '../Header';
 
@@ -7,7 +7,12 @@ export default function Login() {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     const navigate = useNavigate();
+    const location = useLocation();
     const { enqueueSnackbar } = useSnackbar();
+
+    const isAdmin = location.state?.isAdmin || false; // Access the admin status from the state
+
+    console.log("Is Admin:", isAdmin);
 
     const handleSubmit = () => {
         if (!username || !password) {
@@ -38,14 +43,12 @@ export default function Login() {
         }
 
         // If no errors, proceed to navigate
-        navigate("/quizes", { state: { username } });
+        navigate("/quizes", { state: { username, isAdmin } });
     };
-
-  
 
     return (
         <div>
-            <Header />
+            <Header  /> {/* Pass logedOn as true to Header */}
             <div className="py-20">
                 <div className="p-4 px-2 flex flex-col my-15 justify-center items-center">
                     <div className="flex flex-col items-center">

@@ -2,9 +2,13 @@ import React from 'react';
 import { useLocation } from 'react-router-dom'; // Import useLocation
 import Header from '../components/Header'; // Adjust the import as needed
 import Footer from '../components/Footer';
+import Confetti from 'react-confetti';
+import { useWindowSize } from 'react-use';
+
 export default function FinalPage() {
     const { state } = useLocation(); // Use useLocation to access the state
     const { score } = state || { score: 0 }; // Default to 0 if state is undefined
+    const { width, height } = useWindowSize();
 
     // Determine the color based on the score
     let scoreColor = 'text-blue-600';
@@ -17,9 +21,10 @@ export default function FinalPage() {
     return (
         <div>
             <Header />
+            {score > 8 && <Confetti width={width} height={height} />}
             <div className="min-h-screen bg-gray-100 flex justify-center items-center">
                 <div className="text-center mb-12">
-                    <p className="text-2xl font-bold ">You Scored</p>
+                    <p className="text-2xl font-bold">You Scored</p>
                     <p className={`text-4xl font-extrabold ${scoreColor}`}>{score}</p>
                 </div>
             </div>

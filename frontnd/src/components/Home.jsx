@@ -17,37 +17,37 @@ export default function Home() {
   };
 
   return (
-    <div>
+    <div className="min-h-screen flex flex-col">
       <Header />
-      <div className="relative">
+      <div className="flex-grow relative">
         <button
-          className="absolute top-0 right-20 mt-4 mr-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded flex items-center"
-          onClick={() => navigate("/admin")} // Navigate to login page
+          className="absolute top-4 right-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded flex items-center"
+          onClick={() => navigate("/admin")} // Navigate to admin page
         >
           Admin <RiAdminFill className="ml-1" />
         </button>
-        <div className="text-center">
-          <h3 className="p-4 text-3xl font-bold ">Please Login Below {username}</h3>
+        <div className="flex flex-col items-center justify-center text-center mt-10 px-4">
+          <h3 className="p-4 text-2xl sm:text-3xl font-bold">Please Login Below {username}</h3>
           {
             !loggedIn ? (
               <button
-                className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mb-4"
                 onClick={handleLogin}
               >
                 Log On
               </button>
             ) : (
               <button
-                className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mb-4"
                 onClick={() => navigate("/quizes")} // Navigate to quizzes page
               >
                 Get Started
               </button>
             )
           }
-          <Footer />
         </div>
       </div>
+      <Footer />
     </div>
   );
 }

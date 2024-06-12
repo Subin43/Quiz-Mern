@@ -5,13 +5,17 @@ import { Link } from "react-router-dom";
 
 export default function Header() {
   return (
-    <div className="relative bg-black p-6 flex items-center justify-between">
+    <div className="bg-black p-4 flex items-center justify-between">
       <div className="flex items-center">
-        <FaHome className="text-white text-3xl ml-4" />
+    
+          <Link to="/quizes">
+            <FaHome className="text-white text-2xl sm:text-3xl ml-2 sm:ml-4" />
+          </Link>
+      
       </div>
-      <h2 className="absolute left-1/2 transform -translate-x-1/2 text-white text-xl">QUIZ APP</h2>
-      <Link to="/">
-        <MdLogin className="text-white text-3xl mr-4" />
+      <h2 className="text-white text-lg sm:text-xl">QUIZ APP</h2>
+      <Link to="/login">
+        <MdLogin className="text-white text-2xl sm:text-3xl mr-2 sm:mr-4" />
       </Link>
     </div>
   );

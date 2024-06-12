@@ -1,4 +1,3 @@
-// AdminLogin.jsx
 import React, { useState } from "react";
 import { useSnackbar } from "notistack";
 import { useNavigate } from "react-router-dom";
@@ -16,8 +15,8 @@ const AdminLogin = () => {
       return;
     }
     enqueueSnackbar("Admin id detected", { variant: "success" });
-    localStorage.setItem("isAdmin",true); // store admin status in the local storage
-    navigate("/login");
+    // localStorage.setItem("isAdmin", true); // store admin status in the local storage
+    navigate("/login", { state: { isAdmin: true } }); // pass admin status as state
   };
 
   return (
@@ -25,22 +24,22 @@ const AdminLogin = () => {
       <Header />
       <div className=" p-6 m-6">
         <div className="flex items-center justify-center">
-        <label className="font-bold mb-2">Admin Id : </label>
-        <input
-          type="text"
-          placeholder="Enter your Id"
-          value={userId}
-          onChange={(e) => setUserId(e.target.value)}
-          className="px-6 py-2 mb-4 mx-6 rounded border border-gray-300 bg-gray-200"
-        />
+          <label className="font-bold mb-2">Admin Id : </label>
+          <input
+            type="text"
+            placeholder="Enter your Id"
+            value={userId}
+            onChange={(e) => setUserId(e.target.value)}
+            className="px-6 py-2 mb-4 mx-6 rounded border border-gray-300 bg-gray-200"
+          />
         </div>
         <div className="flex justify-center items-center">
-        <button
-          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded "
-          onClick={handleVerify}
-        >
-          Verify
-        </button>
+          <button
+            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded "
+            onClick={handleVerify}
+          >
+            Verify
+          </button>
         </div>
       </div>
     </div>

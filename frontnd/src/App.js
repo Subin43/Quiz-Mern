@@ -21,7 +21,7 @@ function App() {
       <Route path="/sports" element={<QuizDivision division="Sports" />} />
       <Route path="/finish" element={<FinalPage />} />
       <Route path="/addquiz" element={<AddQuiz />} />
-      <Route path='/quiz/edit/:id' element={<EditQuiz />} />
+      <Route path='/edit/:id' element={<EditQuiz />} />
       <Route path='/delete/:id' element={<DeleteQuiz />} />
     </Routes>
   );

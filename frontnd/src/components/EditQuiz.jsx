@@ -1,7 +1,6 @@
-import axios from 'axios';
-import { useSnackbar } from 'notistack';
 import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
+import { useSnackbar } from 'notistack';
 
 export default function EditQuiz() {
   const [sNo, setSNo] = useState(1);
@@ -10,18 +9,25 @@ export default function EditQuiz() {
   const [answer, setAnswer] = useState("");
 
   const { id } = useParams();
-  console.log("ID:", id);
+  const { enqueueSnackbar } = useSnackbar();
+  const navigate = useNavigate()
 
   const [loading, setLoading] = useState(false);
   const [quizEdited, setQuizEdited] = useState(false);
-  const { enqueueSnackbar } = useSnackbar();
 
   useEffect(() => {
     const fetchQuiz = async () => {
       try {
         setLoading(true);
-        const response = await axios.get(`http://localhost:5000/quiz/${id}`);
-        const { sNo, question, answer, option } = response.data;
+        
+        console.log(`Fetching quiz with ID: ${id}`);
+        const response = await fetch(`https://quiz-mernstack.onrender.com/quiz/${id}`);
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+        const data = await response.json();
+        console.log('Fetched data:', data);
+        const { sNo, question, answer, option } = data;
         setSNo(sNo);
         setQuestion(question);
         setAnswer(answer);
@@ -30,7 +36,7 @@ export default function EditQuiz() {
       } catch (error) {
         setLoading(false);
         enqueueSnackbar("Error fetching quiz", { variant: 'error' });
-        console.log("error:", error.message);
+        console.error("Error fetching quiz:", error);
       }
     };
 
@@ -45,22 +51,37 @@ export default function EditQuiz() {
     try {
       setLoading(true);
       const updatedOption = option.split(',').map(opt => opt.trim());
-      await axios.put(`http://localhost:5000/quiz/edit/${id}`, { sNo, question, answer, option: updatedOption });
+      console.log('Updating quiz with data:', { sNo, question, answer, option: updatedOption });
+      const response = await fetch(`https://quiz-mernstack.onrender.com/quiz/edit/${id}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ sNo, question, answer, option: updatedOption }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+
       setLoading(false);
       setQuizEdited(true);
       enqueueSnackbar("Quiz edited successfully", { variant: 'success' });
+      navigate("/quizes");
     } catch (error) {
       setLoading(false);
       enqueueSnackbar("Error editing quiz", { variant: 'error' });
-      console.log("error:", error.message);
+      console.error("Error editing quiz:", error);
     }
   };
+
   return (
-    <div className="max-w-md mx-auto m-10">
-      <h2 className="text-2xl font-bold mb-4">Edit Quiz</h2>
+    <div className="max-w-md mx-auto my-10 p-4 sm:p-6 bg-white shadow-md rounded-lg">
+      <h2 className="text-2xl font-bold mb-4 text-center">Edit Quiz</h2>
+      {loading && <p className="text-center">Loading...</p>}
       <form>
         <div className="mb-4">
-          <label htmlFor="s_No" className="block mb-1">
+          <label htmlFor="s_No" className="block mb-1 text-gray-700">
             S. No:
           </label>
           <input
@@ -72,7 +93,7 @@ export default function EditQuiz() {
           />
         </div>
         <div className="mb-4">
-          <label htmlFor="question" className="block mb-1">
+          <label htmlFor="question" className="block mb-1 text-gray-700">
             Question:
           </label>
           <input
@@ -84,7 +105,7 @@ export default function EditQuiz() {
           />
         </div>
         <div className="mb-4">
-          <label htmlFor="option" className="block mb-1">
+          <label htmlFor="option" className="block mb-1 text-gray-700">
             Option:
           </label>
           <input
@@ -96,7 +117,7 @@ export default function EditQuiz() {
           />
         </div>
         <div className="mb-4">
-          <label htmlFor="answer" className="block mb-1">
+          <label htmlFor="answer" className="block mb-1 text-gray-700">
             Answer:
           </label>
           <input
@@ -117,7 +138,7 @@ export default function EditQuiz() {
         </button>
       </form>
       {quizEdited && (
-        <div className="mt-4 fadeIn">Quiz successfully edited!</div>
+        <div className="mt-4 text-center text-green-500">Quiz successfully edited!</div>
       )}
     </div>
   );

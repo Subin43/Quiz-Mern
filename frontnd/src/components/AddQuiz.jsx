@@ -6,6 +6,7 @@ import { useNavigate } from 'react-router-dom';
 export default function AddQuiz() {
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
+    division:"",
     s_No: 1,
     question: "",
     option: "",
@@ -41,7 +42,7 @@ export default function AddQuiz() {
         setLoading(false);
         setQuizAdded(true);
         enqueueSnackbar("Quiz created successfully!", { variant: 'success' });
-        navigate("/");
+        navigate("/quizes");
       })
       .catch((error) => {
         setLoading(false);
@@ -54,6 +55,17 @@ export default function AddQuiz() {
     <div className="max-w-md mx-auto m-10 p-5">
       <h2 className="text-2xl font-bold mb-4">Add New Quiz</h2>
       <form>
+      <div className="mb-4">
+          <label htmlFor="s_No" className="block mb-1">Division:</label>
+          <input
+            type="text"
+            id="division"
+            name="division"
+            value={formData.division}
+            onChange={handleChange}
+            className="w-full px-3 py-2 border rounded-md focus:outline-none focus:border-blue-500"
+          />
+          </div>
         <div className="mb-4">
           <label htmlFor="s_No" className="block mb-1">S. No:</label>
           <input

@@ -59,8 +59,9 @@ router.put('/edit/:id', async (req, res) => {
 // Get a single quiz
 router.get('/:id', async (req, res) => {
     try {
-        const id = req.params.id; // Corrected line
+        const id = req.params.id;
         console.log("Received ID:", id);
+
         // Ensure ID is present
         if (!id) {
             return res.status(400).json({ error: "Quiz ID required" });
@@ -83,7 +84,6 @@ router.get('/:id', async (req, res) => {
         res.status(500).json({ error: "Internal server error" });
     }
 });
-
 
 // Delete quiz
 router.delete('/delete/:id', async (req, res) => {
